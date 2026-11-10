@@ -121,11 +121,36 @@ export default function DashboardPage() {
             });
           }
         } else {
-          // Fallback guest profile for preview/demo
+          // Fallback profile from demo/local session
+          let savedUser = null;
+          if (typeof window !== 'undefined') {
+            const cookieMatch = document.cookie
+              .split('; ')
+              .find((row) => row.startsWith('gapfinder_auth='));
+            if (cookieMatch) {
+              try {
+                savedUser = JSON.parse(decodeURIComponent(cookieMatch.split('=')[1]));
+              } catch (e) {
+                console.warn(e);
+              }
+            }
+            if (!savedUser && window.localStorage) {
+              const raw = window.localStorage.getItem('gapfinder_user');
+              if (raw) {
+                try {
+                  savedUser = JSON.parse(raw);
+                } catch (e) {
+                  console.warn(e);
+                }
+              }
+            }
+          }
+
           setUserProfile({
-            id: 'guest',
-            email: 'demo@gapfinder.ai',
-            full_name: 'Alex Rivera',
+            id: savedUser?.id || 'guest',
+            email: savedUser?.email || 'demo@gapfinder.ai',
+            full_name: savedUser?.full_name || 'Alex Rivera',
+            role: savedUser?.role || 'student',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           });

@@ -56,7 +56,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const handleLogout = async () => {
     try {
       setLoggingOut(true);
-      await supabase.auth.signOut();
+      // Clear fallback auth session cookie and localStorage
+      if (typeof document !== 'undefined') {
+        document.cookie = 'gapfinder_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem('gapfinder_user');
+      }
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.warn('Supabase signOut error:', e);
+      }
       router.push('/login');
       router.refresh();
     } catch (error) {

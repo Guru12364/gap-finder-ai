@@ -34,6 +34,7 @@ export default function DashboardLayout({
 
           if (profile) {
             setUser(profile);
+            return;
           } else {
             setUser({
               id: authUser.id,
@@ -45,8 +46,58 @@ export default function DashboardLayout({
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             });
+            return;
           }
         }
+
+        // Check fallback session in cookies / localStorage
+        if (typeof window !== 'undefined') {
+          const cookieMatch = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('gapfinder_auth='));
+          let savedUser = null;
+
+          if (cookieMatch) {
+            try {
+              savedUser = JSON.parse(decodeURIComponent(cookieMatch.split('=')[1]));
+            } catch (e) {
+              console.warn(e);
+            }
+          }
+
+          if (!savedUser && window.localStorage) {
+            const raw = window.localStorage.getItem('gapfinder_user');
+            if (raw) {
+              try {
+                savedUser = JSON.parse(raw);
+              } catch (e) {
+                console.warn(e);
+              }
+            }
+          }
+
+          if (savedUser) {
+            setUser({
+              id: savedUser.id || 'demo-user',
+              email: savedUser.email || 'demo@gapfinder.ai',
+              full_name: savedUser.full_name || 'Demo Student',
+              role: savedUser.role || 'student',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            });
+            return;
+          }
+        }
+
+        // Default student fallback
+        setUser({
+          id: 'demo-student',
+          email: 'demo@gapfinder.ai',
+          full_name: 'Alex Rivera (Demo Student)',
+          role: 'student',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
       } catch (err) {
         console.error('Failed to load user:', err);
       }
