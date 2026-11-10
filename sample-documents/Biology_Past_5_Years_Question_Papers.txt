@@ -1,0 +1,20 @@
+PREVIOUS 5 YEARS BOARD & COMPETITIVE QUESTION PAPERS & EXAM BLUEPRINT (2021-2025)
+SUBJECT: BIOLOGY
+CHAPTER 1: PLANT PHYSIOLOGY
+
+EXAM BLUEPRINT & WEIGHTAGE ANALYSIS:
+Total Chapter Weightage: 18 Marks in Final Examination
+1. Photosynthesis & Light Reactions: 35% of Chapter 1 marks (6.3 marks average)
+2. Calvin Cycle / Dark Reaction: 25% weightage (4.5 marks)
+3. Cellular Respiration & ATP Accounting: 25% weightage (4.5 marks)
+4. Transpiration & Water Transport: 15% weightage (2.7 marks)
+
+REPEATED EXAM QUESTIONS ANALYSIS (LAST 5 YEARS):
+- Question Type A (Frequently Missed): "Explain the chemiosmotic hypothesis of ATP generation in chloroplasts with a diagram showing proton movement."
+  Common Mistake: 68% of students mistakenly draw protons accumulating in the stroma instead of the thylakoid lumen.
+- Question Type B: "State the equation for photolysis of water. Name the mineral ions essential for this reaction."
+  Correct Answer: 2H2O -> 4H+ + 4e- + O2. Essential ions: Manganese (Mn2+) and Chlorine (Cl-).
+- Question Type C: "How many molecules of ATP and NADPH are required to fix 6 molecules of CO2 in the Calvin cycle?"
+  Correct Answer: 18 ATP and 12 NADPH.
+- Question Type D: "Explain why transpiration is called a necessary evil (Curtis, 1926)."
+  Correct Answer: Water loss is inevitable as stomata must remain open for CO2 intake necessary for photosynthesis.

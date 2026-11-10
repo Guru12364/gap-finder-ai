@@ -1,0 +1,3 @@
+@echo off
+echo Opening GapFinder AI Interactive Preview in your default browser...
+start "" "%~dp0preview.html"

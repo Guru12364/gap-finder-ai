@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GapFinder AI – Enterprise Learning & Knowledge Gap Detection Platform</title>
+  
+  <!-- Modern Typography: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            slate: {
+              850: '#111827',
+              900: '#0c1222',
+              950: '#070a14',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      background-color: #070a14;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent 70%),
+        radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.05), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.04), transparent 40%);
+      background-attachment: fixed;
+    }
+    .enterprise-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .enterprise-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    }
+    .gradient-brand-text {
+      background: linear-gradient(135deg, #ffffff 20%, #cbd5e1 60%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+
+    .pulse-beacon {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen font-sans selection:bg-brand-500/30 selection:text-white antialiased">
+
+  <!-- TOP ENTERPRISE HEADER -->
+  <header class="sticky top-0 z-40 border-b border-white/[0.08] bg-[#070a14]/85 backdrop-blur-2xl">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      
+      <!-- Brand & Mode Pill -->
+      <div class="flex items-center gap-3.5">
+        <div class="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-[1px] shadow-lg shadow-brand-500/20">
+          <div class="flex h-full w-full items-center justify-center rounded-[11px] bg-slate-950">
+            <i class="fa-solid fa-atom text-cyan-400 text-lg"></i>
+          </div>
+        </div>
+        
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold tracking-tight text-white font-sans">GapFinder</span>
+            <span class="rounded bg-brand-500/10 border border-brand-500/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-400 font-mono">AI Enterprise</span>
+          </div>
+          <p id="header-context-subtitle" class="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <span class="h-1.5 w-1.5 rounded-full bg-amber-400 inline-block pulse-beacon"></span>
+            Academic Supervisor Console
+          </p>
+        </div>
+      </div>
+
+      <!-- NAVIGATION FOR STUDENT ROLE ONLY (Hidden when Admin) -->
+      <nav id="nav-student-container" class="hidden md:flex items-center gap-1">
+        <button onclick="switchStudentTab('dashboard')" id="nav-std-dashboard" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-brand-600 text-white shadow-sm shadow-brand-500/30">
+          <i class="fa-solid fa-gauge mr-1.5 text-slate-200"></i> Dashboard
+        </button>
+        <button onclick="switchStudentTab('materials')" id="nav-std-materials" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-cloud-arrow-up mr-1.5 text-cyan-400"></i> Upload & Sections
+        </button>
+        <button onclick="switchStudentTab('quiz')" id="nav-std-quiz" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-clipboard-check mr-1.5 text-indigo-400"></i> Diagnostic Quiz
+        </button>
+        <button onclick="switchStudentTab('gaps')" id="nav-std-gaps" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-400"></i> Gap Analysis
+        </button>
+        <button onclick="switchStudentTab('revision')" id="nav-std-revision" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-calendar-check mr-1.5 text-emerald-400"></i> Revision Plan
+        </button>
+        <button onclick="switchStudentTab('assistant')" id="nav-std-assistant" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-brain mr-1.5 text-purple-400"></i> AI Tutor
+        </button>
+      </nav>
+
+      <!-- NAVIGATION FOR ADMIN ROLE ONLY (Strictly Monitoring - No student buttons) -->
+      <nav id="nav-admin-container" class="flex items-center gap-1.5">
+        <button onclick="scrollToAdminSection('admin-cohort-kpis')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-chart-pie mr-1.5 text-amber-400"></i> Cohort Overview
+        </button>
+        <button onclick="scrollToAdminSection('admin-students-section')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/20 shadow-sm transition-all">
+          <i class="fa-solid fa-users-viewfinder mr-1.5 text-amber-400"></i> Student Roster & Time Logs
+        </button>
+        <button onclick="scrollToAdminSection('admin-heatmap-section')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-fire mr-1.5 text-rose-400"></i> Curriculum Gap Heatmap
+        </button>
+        <button onclick="scrollToAdminSection('admin-security-section')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all">
+          <i class="fa-solid fa-shield-halved mr-1.5 text-emerald-400"></i> Live Security Audits
+        </button>
+      </nav>
+
+      <!-- RIGHT UTILITY CONTROLS: LPU STATUS & ROLE SWITCHER -->
+      <div class="flex items-center gap-3">
+        <!-- Groq Engine Live Indicator -->
+        <div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-white/[0.08] text-xs font-mono text-slate-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Groq LPU Active</span>
+          <span class="text-[10px] text-slate-500">| Qwen 27B</span>
+        </div>
+
+        <!-- Role Switcher Trigger Button -->
+        <div class="relative">
+          <button onclick="toggleRoleDropdown()" id="role-selector-btn" class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/[0.1] bg-slate-900/90 hover:bg-slate-800 transition-all text-xs font-medium">
+            <div id="role-avatar-badge" class="h-6 w-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center font-bold text-xs">
+              <i class="fa-solid fa-user-shield text-[11px]"></i>
+            </div>
+            <div class="text-left">
+              <p id="role-name-label" class="font-bold text-white text-[11px] leading-tight">Admin Monitor</p>
+              <p id="role-email-label" class="text-[10px] text-slate-400 font-mono leading-tight">admin@gapfinder.ai</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="role-dropdown-menu" class="hidden absolute right-0 mt-2 w-80 rounded-2xl enterprise-card p-2.5 border border-white/[0.12] shadow-2xl z-50 space-y-1.5 bg-[#0b101e]/98 backdrop-blur-2xl">
+            <div class="px-3 py-2 border-b border-white/[0.06] flex items-center justify-between">
+              <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono">Select Active Persona</span>
+              <span class="text-[10px] text-slate-400 font-mono">Role Segregation</span>
+            </div>
+
+            <!-- Admin Role Option -->
+            <button onclick="setAccountRole('admin')" class="w-full text-left p-3 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-amber-500/20 flex items-start gap-3 transition-all group">
+              <div class="h-9 w-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+                <i class="fa-solid fa-user-shield"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-amber-300">Admin / Instructor View</p>
+                  <span id="badge-admin-active" class="h-2 w-2 rounded-full bg-amber-400"></span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5">Monitor students, time spent, quiz results & login security.</p>
+                <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-slate-400">
+                  <span class="text-slate-400">admin@gapfinder.ai</span> • <span>Admin@2026</span>
+                </div>
+              </div>
+            </button>
+
+            <!-- Student Role Option -->
+            <button onclick="setAccountRole('student')" class="w-full text-left p-3 rounded-xl hover:bg-white/[0.05] border border-transparent hover:border-brand-500/20 flex items-start gap-3 transition-all group">
+              <div class="h-9 w-9 rounded-xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+                <i class="fa-solid fa-user-graduate"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-xs font-bold text-slate-200">Student Learning View</p>
+                  <span id="badge-student-active" class="hidden h-2 w-2 rounded-full bg-emerald-400"></span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5">Direct document upload, quizzes, AI tutor & revision plan.</p>
+                <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-slate-400">
+                  <span class="text-slate-400">demo@gapfinder.ai</span> • <span>GapFinder@2026</span>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed top-20 right-6 z-50 transform transition-all duration-300 translate-y-[-20px] opacity-0 pointer-events-none px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border text-xs font-medium"></div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ========================================================================= -->
+    <!-- VIEW A: PURE ADMIN MONITORING CONSOLE (Only visible when role === 'admin') -->
+    <!-- ========================================================================= -->
+    <div id="admin-view-root" class="space-y-8">
+      
+      <!-- Top Executive Banner -->
+      <div class="enterprise-card rounded-2xl p-6 sm:p-8 relative overflow-hidden border-amber-500/20">
+        <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-[11px] font-bold uppercase tracking-wider">
+                <i class="fa-solid fa-lock mr-1"></i> Executive Supervision Mode
+              </span>
+              <span class="text-xs text-slate-400">• High-Fidelity Cohort Telemetry</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Student Cohort Monitoring & Academic Audit
+            </h1>
+            <p class="text-sm text-slate-300 mt-1.5 max-w-2xl leading-relaxed">
+              Real-time surveillance of student diagnostic assessment scores, cumulative study time logs, individual knowledge gaps, and verified device login sessions.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="refreshAdminData()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/[0.1] text-white text-xs font-semibold shadow-sm flex items-center gap-2 transition-all">
+              <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Refresh Telemetry
+            </button>
+            <button onclick="exportCohortReport()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white text-xs font-bold shadow-lg shadow-amber-600/20 flex items-center gap-2 transition-all">
+              <i class="fa-solid fa-file-arrow-down"></i> Export Audit Log (CSV)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cohort Summary Metric Cards (4 KPIs) -->
+      <div id="admin-cohort-kpis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Metric 1: Monitored Students -->
+        <div class="enterprise-card rounded-2xl p-5 border-slate-700/60">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span class="font-medium">Total Monitored Students</span>
+            <div class="h-8 w-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2 mt-3">
+            <p id="admin-kpi-students" class="text-3xl font-extrabold text-white tabular-nums">4</p>
+            <span class="text-xs text-slate-400">enrolled in Bio & OS</span>
+          </div>
+          <div class="flex items-center gap-2 mt-3 pt-3 border-t border-white/[0.06] text-xs">
+            <span class="inline-flex items-center gap-1.5 text-emerald-400 font-semibold">
+              <span class="h-2 w-2 rounded-full bg-emerald-400 pulse-beacon"></span>
+              2 Online Now
+            </span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-400">1 Away • 1 Offline</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Total Study Time -->
+        <div class="enterprise-card rounded-2xl p-5 border-slate-700/60">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span class="font-medium">Cohort Study Time Invested</span>
+            <div class="h-8 w-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2 mt-3">
+            <p id="admin-kpi-hours" class="text-3xl font-extrabold text-cyan-300 tabular-nums">35.3h</p>
+            <span class="text-xs text-cyan-400/80 font-mono">+4.2h this week</span>
+          </div>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06] text-xs text-slate-400">
+            <span>Cohort Average</span>
+            <span class="font-mono text-slate-200 font-bold">8.8 hrs / student</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Diagnostic Quizzes Completed -->
+        <div class="enterprise-card rounded-2xl p-5 border-slate-700/60">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span class="font-medium">Total Quizzes Attempted</span>
+            <div class="h-8 w-8 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2 mt-3">
+            <p id="admin-kpi-quizzes" class="text-3xl font-extrabold text-purple-300 tabular-nums">23</p>
+            <span class="text-xs text-slate-400">completed diagnostic tests</span>
+          </div>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06] text-xs text-slate-400">
+            <span>Pass Rate (≥70%)</span>
+            <span class="font-mono text-purple-300 font-bold">14 / 23 (60.8%)</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Cohort Average Accuracy -->
+        <div class="enterprise-card rounded-2xl p-5 border-slate-700/60">
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <span class="font-medium">Cohort Diagnostic Mastery</span>
+            <div class="h-8 w-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+              <i class="fa-solid fa-bullseye"></i>
+            </div>
+          </div>
+          <div class="flex items-baseline gap-2 mt-3">
+            <p id="admin-kpi-accuracy" class="text-3xl font-extrabold text-amber-300 tabular-nums">60.5%</p>
+            <span class="text-xs text-rose-400 font-mono">2 at-risk students</span>
+          </div>
+          <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06] text-xs text-slate-400">
+            <span>Target Benchmark</span>
+            <span class="font-mono text-emerald-400 font-bold">≥ 75.0% Goal</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MAIN SECTION: STUDENT ROSTER & REAL-TIME MONITORING TABLE -->
+      <div id="admin-students-section" class="enterprise-card rounded-2xl p-6 sm:p-7 space-y-5">
+        
+        <!-- Table Toolbar: Header, Search, Filter Pills -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-user-graduate text-cyan-400"></i> Individual Student Monitoring Roster
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Real-time surveillance of quiz submissions, time invested, diagnosed gaps, and login sessions.</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-500"></i>
+              <input type="text" id="admin-search-input" onkeyup="filterAdminStudents()" placeholder="Filter students or institution..." class="pl-8 pr-3 py-1.5 rounded-xl bg-slate-900 border border-white/[0.1] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-52 sm:w-64 transition-all">
+            </div>
+
+            <div class="flex items-center bg-slate-900 p-0.5 rounded-xl border border-white/[0.08] text-[11px] font-medium text-slate-400">
+              <button onclick="setAdminFilter('all')" id="flt-all" class="px-2.5 py-1 rounded-lg bg-slate-800 text-white font-bold transition-all">All (4)</button>
+              <button onclick="setAdminFilter('online')" id="flt-online" class="px-2.5 py-1 rounded-lg hover:text-white transition-all">🟢 Online (2)</button>
+              <button onclick="setAdminFilter('atrisk')" id="flt-atrisk" class="px-2.5 py-1 rounded-lg hover:text-white transition-all">⚠️ At-Risk (2)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/[0.08] text-slate-400 uppercase font-mono text-[10px] tracking-wider">
+                <th class="pb-3 pl-2">Student Identity</th>
+                <th class="pb-3">Session Status</th>
+                <th class="pb-3">Time Spent Studying</th>
+                <th class="pb-3">Quiz Results & Accuracy</th>
+                <th class="pb-3">Diagnosed Blindspots</th>
+                <th class="pb-3">Last Active & Device</th>
+                <th class="pb-3 text-right pr-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-students-table-body" class="divide-y divide-white/[0.04]">
+              <!-- Dynamically populated via renderAdminStudentsTable() -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pt-2 flex items-center justify-between text-xs text-slate-500 border-t border-white/[0.04]">
+          <span>Showing 4 verified student records in current cohort</span>
+          <span class="font-mono text-[11px] text-slate-400">Auto-refreshes every 30s • Encrypted Audit Trail</span>
+        </div>
+
+      </div>
+
+      <!-- SECTION 2: CLASS-WIDE KNOWLEDGE GAP HEATMAP & LIVE SECURITY AUDITS -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Cohort Hardest Topics Heatmap -->
+        <div id="admin-heatmap-section" class="enterprise-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-fire text-rose-400"></i> Class-Wide Knowledge Gap Heatmap
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">High-frequency misconception zones across all student attempts.</p>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold">Priority Remediation</span>
+          </div>
+
+          <div class="space-y-4 pt-1">
+            
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-200">Light-Dependent Reactions & Photolysis (PS II)</span>
+                <span class="font-mono text-rose-400 font-bold">68% Failure Rate • 3 Students Affected</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/[0.05]">
+                <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-2 rounded-full" style="width: 68%"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">Root Misconception: 68% of students confuse thylakoid lumen proton accumulation with the stroma.</p>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-200">Banker's Algorithm Safe State Logic & Need Matrix</span>
+                <span class="font-mono text-amber-400 font-bold">58% Failure Rate • 2 Students Affected</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/[0.05]">
+                <div class="bg-gradient-to-r from-yellow-500 to-amber-500 h-2 rounded-full" style="width: 58%"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">Root Misconception: Students fail to compute Need = Max - Allocation before testing safety sequence.</p>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-200">Effective Access Time (EAT) under 2-Cycle Memory Penalty</span>
+                <span class="font-mono text-amber-400 font-bold">52% Failure Rate • 2 Students Affected</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/[0.05]">
+                <div class="bg-gradient-to-r from-indigo-500 to-amber-500 h-2 rounded-full" style="width: 52%"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">Formula gap: EAT = Hit_rate * (TLB + Mem) + Miss_rate * (TLB + 2*Mem).</p>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="font-semibold text-slate-200">RuBisCO Dual Carboxylase-Oxygenase Regulation</span>
+                <span class="font-mono text-cyan-400 font-bold">40% Failure Rate • 2 Students Affected</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-white/[0.05]">
+                <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-2 rounded-full" style="width: 40%"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">Calvin cycle ATP and NADPH stoichiometric cost for hexose synthesis.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Live Security & Login Stream -->
+        <div id="admin-security-section" class="enterprise-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-fingerprint text-emerald-400"></i> Live Security & Login Audit Stream
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Chronological device authentication and geolocation verification.</p>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">100% Verified</span>
+          </div>
+
+          <div class="space-y-2.5 pt-1 max-h-80 overflow-y-auto pr-1">
+            
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/[0.05] flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 pulse-beacon"></span>
+                <div>
+                  <p class="text-xs font-bold text-white">Alex Rivera <span class="font-mono text-[10px] text-slate-400">(demo@gapfinder.ai)</span></p>
+                  <p class="text-[10px] text-slate-400 font-mono">192.168.1.42 • San Francisco, US • Chrome 124 / Windows 11</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/20">Active Now</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/[0.05] flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <div>
+                  <p class="text-xs font-bold text-white">Priya Sharma <span class="font-mono text-[10px] text-slate-400">(priya.sharma@stanford.edu)</span></p>
+                  <p class="text-[10px] text-slate-400 font-mono">172.56.21.90 • Palo Alto, US • Safari 17 / macOS Sonoma</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 font-mono text-[10px] font-bold border border-amber-500/20">Away (18m)</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/[0.05] flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+                <div>
+                  <p class="text-xs font-bold text-white">Marcus Vance <span class="font-mono text-[10px] text-slate-400">(m.vance@mit.edu)</span></p>
+                  <p class="text-[10px] text-slate-400 font-mono">18.29.0.12 • Cambridge, US • Firefox 125 / Linux</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-mono text-[10px]">Signed Out</span>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-slate-900/80 border border-white/[0.05] flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+                <div>
+                  <p class="text-xs font-bold text-white">Sophia Chen <span class="font-mono text-[10px] text-slate-400">(sophia.chen@berkeley.edu)</span></p>
+                  <p class="text-[10px] text-slate-400 font-mono">128.32.0.8 • Berkeley, US • Chrome Mobile / Android 14</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-mono text-[10px]">Signed Out</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW B: STUDENT LEARNING WORKSPACE (Only visible when role === 'student') -->
+    <!-- ========================================================================= -->
+    <div id="student-view-root" class="hidden space-y-8">
+      
+      <!-- TAB 1: STUDENT DASHBOARD -->
+      <section id="tab-dashboard" class="space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Welcome back, <span class="gradient-brand-text">Alex Rivera</span>! 👋
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">
+              Enrolled in <strong>Plant Physiology & Operating Systems</strong>. Diagnostic Gap Detection Active.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="switchStudentTab('materials')" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-brand-600 hover:from-cyan-400 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Upload Document & Extract Sections
+            </button>
+            <button onclick="switchStudentTab('quiz')" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white text-xs font-semibold shadow-lg shadow-brand-600/30 flex items-center gap-2">
+              <i class="fa-solid fa-play text-xs"></i> Take Diagnostic Quiz
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Stats Cards Row -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="enterprise-card rounded-2xl p-5">
+            <div class="flex items-center justify-between text-slate-400 text-xs">
+              <span>Uploaded Materials</span>
+              <i class="fa-solid fa-book text-brand-400"></i>
+            </div>
+            <p id="stat-docs" class="text-2xl sm:text-3xl font-extrabold text-white mt-2">3</p>
+            <span id="stat-pages" class="text-[11px] text-emerald-400 mt-1 block">98 pages • 12 sections mapped</span>
+          </div>
+
+          <div class="enterprise-card rounded-2xl p-5">
+            <div class="flex items-center justify-between text-slate-400 text-xs">
+              <span>Quizzes Attempted</span>
+              <i class="fa-solid fa-clipboard-check text-purple-400"></i>
+            </div>
+            <p id="stat-quizzes" class="text-2xl sm:text-3xl font-extrabold text-white mt-2">1</p>
+            <span class="text-[11px] text-slate-400 mt-1 block">Active Diagnostic Attempt</span>
+          </div>
+
+          <div class="enterprise-card rounded-2xl p-5">
+            <div class="flex items-center justify-between text-slate-400 text-xs">
+              <span>Overall Accuracy</span>
+              <i class="fa-solid fa-bullseye text-cyan-400"></i>
+            </div>
+            <p id="stat-accuracy" class="text-2xl sm:text-3xl font-extrabold text-cyan-400 mt-2">35.0%</p>
+            <span class="text-[11px] text-rose-400 mt-1 block">2 Weak Knowledge Gaps</span>
+          </div>
+
+          <div class="enterprise-card rounded-2xl p-5">
+            <div class="flex items-center justify-between text-slate-400 text-xs">
+              <span>Total Study Time</span>
+              <i class="fa-solid fa-stopwatch text-amber-400"></i>
+            </div>
+            <p class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-2 font-mono">6h 12m</p>
+            <span class="text-[11px] text-slate-400 mt-1 block">Monitored platform time</span>
+          </div>
+        </div>
+
+        <!-- Recent Quizzes List with DELETE BUTTONS -->
+        <div class="enterprise-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-brand-400"></i> My Diagnostic Assessments & Delete Controls
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Manage, review answers, or delete test attempts.</p>
+            </div>
+          </div>
+          <div id="recent-quizzes-container" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: UPLOAD & SECTIONS -->
+      <section id="tab-materials" class="hidden space-y-8">
+        <div class="enterprise-card rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-white/[0.06] pb-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up text-cyan-400"></i> Direct Document Upload & Auto-Extracted Relevant Sections
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Upload syllabus, textbook chapters, or question papers. Our Groq AI automatically extracts structured sections, concept chips, formulas, and definitions.</p>
+          </div>
+
+          <!-- Direct Upload Area -->
+          <div class="space-y-4">
+            <div id="dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" class="border-2 border-dashed border-white/10 hover:border-cyan-500/50 rounded-2xl p-8 text-center bg-slate-900/50 transition-all cursor-pointer" onclick="document.getElementById('file-input').click()">
+              <input type="file" id="file-input" class="hidden" onchange="handleFileSelected(event)" accept=".pdf,.txt,.docx,.md">
+              <div class="h-12 w-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto mb-3 text-lg">
+                <i class="fa-solid fa-file-arrow-up"></i>
+              </div>
+              <p class="text-sm font-bold text-white">Click or drag & drop syllabus documents</p>
+              <p class="text-xs text-slate-400 mt-1">Supports PDF, DOCX, TXT, Markdown (Max 25MB)</p>
+            </div>
+
+            <div id="selected-file-badge" class="hidden p-3 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-file-pdf text-brand-400"></i>
+                <span id="selected-file-name" class="text-xs font-bold text-white">File.pdf</span>
+                <span id="selected-file-size" class="text-[10px] text-slate-400 font-mono">1.2 MB</span>
+              </div>
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">Ready for Extraction</span>
+            </div>
+
+            <!-- Content Area (Auto-populated or editable) -->
+            <div>
+              <label class="text-xs font-bold text-slate-300 block mb-1.5 font-mono">Document Content / Text Extract:</label>
+              <textarea id="upload-doc-content" rows="6" class="w-full rounded-xl bg-slate-900 border border-white/[0.1] p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-cyan-500" placeholder="Paste study document text or notes here, or upload above..."></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-400 font-mono">Load Sample:</span>
+                <button onclick="loadDirectSample('bio-syllabus')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-cyan-400 border border-white/[0.08]">Biology Plant Physiology</button>
+                <button onclick="loadDirectSample('os-deadlock')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-indigo-400 border border-white/[0.08]">Operating Systems Deadlocks</button>
+              </div>
+
+              <button onclick="uploadDocumentWithSections()" id="btn-upload-doc" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-brand-600 hover:from-cyan-400 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+                <i class="fa-solid fa-sparkles"></i> Upload & Extract Relevant Sections
+              </button>
+            </div>
+          </div>
+
+          <!-- Structured Relevant Sections Output Area -->
+          <div class="pt-6 border-t border-white/[0.06] space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-layer-group text-brand-400"></i> Extracted Document Hierarchy & Relevant Sections
+            </h3>
+            <div id="documents-sections-container" class="space-y-4">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DIAGNOSTIC QUIZ (Clean neutral options until submitted) -->
+      <section id="tab-quiz" class="hidden space-y-8">
+        <div class="enterprise-card rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-4">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-mono font-bold uppercase">Diagnostic Mode</span>
+              <h2 id="quiz-header-title" class="text-xl font-bold text-white mt-1">Plant Physiology: Photosynthesis & Light Reactions</h2>
+              <p class="text-xs text-slate-400 mt-0.5">Select answers below. Correct answers and RAG misconception analyses will be revealed ONLY after submission.</p>
+            </div>
+            <div class="text-right">
+              <span id="quiz-progress-label" class="text-xs font-mono text-cyan-400 font-bold">4 Questions</span>
+            </div>
+          </div>
+
+          <div id="quiz-questions-list" class="space-y-6">
+            <!-- Questions rendered neutrally -->
+          </div>
+
+          <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+            <button onclick="resetCurrentQuiz()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-semibold border border-white/[0.08]">
+              <i class="fa-solid fa-rotate-left mr-1.5"></i> Clear Selections
+            </button>
+            <button onclick="submitQuizEvaluation()" id="btn-submit-quiz" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-500/25 flex items-center gap-2">
+              <i class="fa-solid fa-circle-check"></i> Submit Quiz & Evaluate Knowledge Gaps
+            </button>
+          </div>
+
+          <!-- Evaluation Score Banner (revealed upon submission) -->
+          <div id="quiz-results-banner" class="hidden p-5 rounded-2xl bg-slate-900 border border-white/10 space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: GAP ANALYSIS -->
+      <section id="tab-gaps" class="hidden space-y-8">
+        <div class="enterprise-card rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-white/[0.06] pb-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Diagnosed Knowledge Gaps & Remediation Insights
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Classification based on diagnostic quiz accuracy: &lt;50% Weak, 50-79% Medium, ≥80% Strong.</p>
+          </div>
+          <div id="gaps-list-container" class="space-y-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: REVISION PLAN -->
+      <section id="tab-revision" class="hidden space-y-8">
+        <div class="enterprise-card rounded-2xl p-6 sm:p-8 space-y-6">
+          <div class="border-b border-white/[0.06] pb-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-calendar-check text-emerald-400"></i> Adaptive 3-Day Targeted Revision Schedule
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">Priority-weighted study plan targeting diagnosed misconceptions with direct syllabus references.</p>
+          </div>
+          <div id="revision-timeline-container" class="space-y-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: AI TUTOR (GROQ POWERED) -->
+      <section id="tab-assistant" class="hidden space-y-8">
+        <div class="enterprise-card rounded-2xl p-6 sm:p-8 flex flex-col h-[750px]">
+          <div class="flex items-center justify-between border-b border-white/[0.06] pb-4 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-base">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white">Socratic AI Pedagogical Tutor</h3>
+                <p class="text-xs text-slate-400">Powered exclusively by Groq LPU (Qwen 27B / GPT-OSS 120B) with document citations</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[10px] font-bold">Pure Groq AI</span>
+          </div>
+
+          <!-- Chat messages stream -->
+          <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-2 mb-4">
+            <div class="flex gap-3">
+              <div class="h-8 w-8 rounded-lg bg-purple-500/20 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">AI</div>
+              <div class="enterprise-card p-4 rounded-2xl max-w-2xl text-xs space-y-2 border-slate-700/60">
+                <p class="text-slate-200">Hello Alex! I am your personalized GapFinder AI tutor. I have reviewed your diagnostic test on <strong>Plant Physiology & Deadlocks</strong>.</p>
+                <p class="text-slate-400">I noticed a knowledge gap regarding <em>water photolysis at Photosystem II</em> and proton accumulation. What would you like to clarify?</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat input -->
+          <div class="pt-3 border-t border-white/[0.06] flex items-center gap-2">
+            <input type="text" id="chat-user-input" onkeydown="if(event.key === 'Enter') sendChatMessage()" placeholder="Ask a question about photosynthesis, Banker's algorithm, or your knowledge gaps..." class="flex-1 rounded-xl bg-slate-900 border border-white/[0.1] px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-all">
+            <button onclick="sendChatMessage()" id="btn-send-chat" class="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-purple-600/20 flex items-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Send
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- HIGH-END STUDENT DRILL-DOWN INSPECTION MODAL (STRIPE-GRADE UI)           -->
+  <!-- ========================================================================= -->
+  <div id="student-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl transition-all">
+    <div class="enterprise-card border-white/20 bg-[#090e1d]/98 max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl rounded-3xl">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-white/[0.08] pb-4">
+        <div class="flex items-center gap-4">
+          <div id="modal-std-avatar" class="h-14 w-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 text-white font-extrabold flex items-center justify-center text-xl shadow-lg shadow-brand-500/20">
+            A
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modal-std-name" class="text-xl font-bold text-white">Alex Rivera</h3>
+              <span id="modal-std-status" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Online</span>
+            </div>
+            <p id="modal-std-email" class="text-xs text-slate-400 font-mono mt-0.5">demo@gapfinder.ai • Stanford School of Engineering</p>
+          </div>
+        </div>
+        <button onclick="closeStudentModal()" class="h-9 w-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Quick Metrics Summary Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Total Time Spent</span>
+          <p id="modal-std-time" class="text-xl font-bold text-cyan-400 mt-1 font-mono">6h 12m</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Quizzes Attempted</span>
+          <p id="modal-std-quizzes" class="text-xl font-bold text-brand-400 mt-1 font-mono">4</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Diagnostic Mastery</span>
+          <p id="modal-std-accuracy" class="text-xl font-bold text-rose-400 mt-1 font-mono">38% (Weak)</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+          <span class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">Verified Logins</span>
+          <p id="modal-std-logins" class="text-xl font-bold text-emerald-400 mt-1 font-mono">14 Sessions</p>
+        </div>
+      </div>
+
+      <!-- Student Quizzes Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5 font-mono">
+          <i class="fa-solid fa-clipboard-check text-brand-400"></i> Individual Diagnostic Assessment Results & Durations:
+        </h4>
+        <div class="overflow-x-auto rounded-xl border border-white/[0.06] bg-slate-900/40">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/[0.06] text-slate-400 font-mono text-[10px] bg-slate-900/80">
+                <th class="py-2.5 pl-3">Assessment Title</th>
+                <th class="py-2.5">Score</th>
+                <th class="py-2.5">Accuracy</th>
+                <th class="py-2.5">Time Invested</th>
+                <th class="py-2.5 pr-3">Date Completed</th>
+              </tr>
+            </thead>
+            <tbody id="modal-quizzes-body" class="divide-y divide-white/[0.04]">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Security & Device Login Audit Trail -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5 font-mono">
+          <i class="fa-solid fa-fingerprint text-emerald-400"></i> Security Login History & Device Fingerprinting:
+        </h4>
+        <div class="overflow-x-auto rounded-xl border border-white/[0.06] bg-slate-900/40">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-white/[0.06] text-slate-400 font-mono text-[10px] bg-slate-900/80">
+                <th class="py-2.5 pl-3">Timestamp</th>
+                <th class="py-2.5">IP Address</th>
+                <th class="py-2.5">Location</th>
+                <th class="py-2.5">Device & Browser</th>
+                <th class="py-2.5 pr-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="modal-logins-body" class="divide-y divide-white/[0.04]">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- APPLICATION SCRIPT & STATE MANAGEMENT -->
+  <script>
+    // Global State
+    let currentRole = 'admin'; // DEFAULT: 'admin' for monitoring requested by user
+    let adminFilter = 'all';
+    let documents = [];
+    let quizzes = [];
+    let topics = [];
+    let adminStudents = [];
+    let activeQuizQuestions = [];
+    let selectedUserAnswers = {};
+    let isQuizSubmitted = false;
+    let currentUploadFileName = 'Biology_Plant_Physiology_Syllabus.pdf';
+    let currentUploadSubject = 'Biology';
+
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.className = `fixed top-20 right-6 z-50 transform transition-all duration-300 translate-y-0 opacity-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border text-xs font-medium ${
+        type === 'success' ? 'bg-emerald-950 border-emerald-500/40 text-emerald-300' :
+        type === 'error' ? 'bg-rose-950 border-rose-500/40 text-rose-300' :
+        'bg-indigo-950 border-indigo-500/40 text-indigo-300'
+      }`;
+      setTimeout(() => {
+        toast.classList.add('translate-y-[-20px]', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    // Role Switcher Dropdown
+    function toggleRoleDropdown() {
+      const menu = document.getElementById('role-dropdown-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Set Active Role (Strict Role Segregation)
+    function setAccountRole(role) {
+      document.getElementById('role-dropdown-menu').classList.add('hidden');
+      currentRole = role;
+      applyRoleViews();
+    }
+
+    function applyRoleViews() {
+      const adminRoot = document.getElementById('admin-view-root');
+      const studentRoot = document.getElementById('student-view-root');
+      const navAdmin = document.getElementById('nav-admin-container');
+      const navStudent = document.getElementById('nav-student-container');
+      const roleAvatar = document.getElementById('role-avatar-badge');
+      const roleName = document.getElementById('role-name-label');
+      const roleEmail = document.getElementById('role-email-label');
+      const contextSubtitle = document.getElementById('header-context-subtitle');
+      const badgeAdmin = document.getElementById('badge-admin-active');
+      const badgeStudent = document.getElementById('badge-student-active');
+
+      if (currentRole === 'admin') {
+        // ADMIN MODE: Strictly monitoring! No student tabs, no quiz taking, no upload
+        adminRoot.classList.remove('hidden');
+        studentRoot.classList.add('hidden');
+        navAdmin.classList.remove('hidden');
+        navStudent.classList.add('hidden');
+
+        roleAvatar.className = 'h-6 w-6 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center font-bold text-xs';
+        roleAvatar.innerHTML = '<i class="fa-solid fa-user-shield text-[11px]"></i>';
+        roleName.innerText = 'Admin Monitor';
+        roleEmail.innerText = 'admin@gapfinder.ai';
+        contextSubtitle.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-amber-400 inline-block pulse-beacon"></span> Academic Supervisor Console';
+
+        badgeAdmin.classList.remove('hidden');
+        badgeStudent.classList.add('hidden');
+
+        refreshAdminData();
+        showToast('Switched to Admin Monitoring Console (admin@gapfinder.ai)', 'info');
+      } else {
+        // STUDENT MODE: Personalized student workspace
+        adminRoot.classList.add('hidden');
+        studentRoot.classList.remove('hidden');
+        navAdmin.classList.add('hidden');
+        navStudent.classList.remove('hidden');
+
+        roleAvatar.className = 'h-6 w-6 rounded-lg bg-brand-500/20 border border-brand-500/40 text-brand-300 flex items-center justify-center font-bold text-xs';
+        roleAvatar.innerHTML = 'D';
+        roleName.innerText = 'Alex Rivera (Student)';
+        roleEmail.innerText = 'demo@gapfinder.ai';
+        contextSubtitle.innerHTML = '<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block pulse-beacon"></span> Student Learning Workspace';
+
+        badgeAdmin.classList.add('hidden');
+        badgeStudent.classList.remove('hidden');
+
+        switchStudentTab('dashboard');
+        showToast('Switched to Student Workspace (demo@gapfinder.ai)', 'info');
+      }
+    }
+
+    // Scroll to specific Admin Section
+    function scrollToAdminSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Switch Student Tab
+    function switchStudentTab(tabId) {
+      const tabs = ['dashboard', 'materials', 'quiz', 'gaps', 'revision', 'assistant'];
+      tabs.forEach(t => {
+        const sec = document.getElementById('tab-' + t);
+        const btn = document.getElementById('nav-std-' + t);
+        if (t === tabId) {
+          if (sec) sec.classList.remove('hidden');
+          if (btn) {
+            btn.classList.add('bg-brand-600', 'text-white');
+            btn.classList.remove('text-slate-300', 'hover:bg-white/[0.06]');
+          }
+        } else {
+          if (sec) sec.classList.add('hidden');
+          if (btn) {
+            btn.classList.remove('bg-brand-600', 'text-white');
+            btn.classList.add('text-slate-300');
+          }
+        }
+      });
+    }
+
+    // Load initial data from server
+    async function loadInitialData() {
+      try {
+        const [docsRes, quizzesRes, gapsRes, studentsRes] = await Promise.all([
+          fetch('/api/documents').then(r => r.json()).catch(() => []),
+          fetch('/api/quizzes').then(r => r.json()).catch(() => []),
+          fetch('/api/gaps').then(r => r.json()).catch(() => []),
+          fetch('/api/admin/students').then(r => r.json()).catch(() => [])
+        ]);
+
+        documents = docsRes;
+        quizzes = quizzesRes;
+        topics = gapsRes;
+        adminStudents = studentsRes;
+
+        renderAdminStudentsTable();
+        renderDocumentsAndSectionsTree();
+        renderRecentQuizzes();
+        renderGaps();
+        renderRevisionPlan();
+
+        if (quizzes.length > 0 && quizzes[0].questions) {
+          loadQuizQuestions(quizzes[0].questions, quizzes[0].topic);
+        }
+
+        applyRoleViews();
+      } catch (err) {
+        console.error('Data initialization error:', err);
+      }
+    }
+
+    // Refresh Admin Cohort Data
+    async function refreshAdminData() {
+      try {
+        const [students, analytics] = await Promise.all([
+          fetch('/api/admin/students').then(r => r.json()),
+          fetch('/api/admin/analytics').then(r => r.json()).catch(() => null)
+        ]);
+
+        adminStudents = students;
+        renderAdminStudentsTable();
+
+        if (analytics) {
+          document.getElementById('admin-kpi-students').innerText = analytics.totalStudents;
+          document.getElementById('admin-kpi-hours').innerText = analytics.totalHours + 'h';
+          document.getElementById('admin-kpi-quizzes').innerText = analytics.totalQuizzes;
+          document.getElementById('admin-kpi-accuracy').innerText = analytics.avgAccuracy + '%';
+        }
+      } catch (err) {
+        console.error('Admin refresh error:', err);
+      }
+    }
+
+    // Admin Filter Handler
+    function setAdminFilter(filter) {
+      adminFilter = filter;
+      ['all', 'online', 'atrisk'].forEach(f => {
+        const btn = document.getElementById('flt-' + f);
+        if (f === filter) {
+          btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-white font-bold transition-all';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg hover:text-white transition-all';
+        }
+      });
+      renderAdminStudentsTable();
+    }
+
+    function filterAdminStudents() {
+      renderAdminStudentsTable();
+    }
+
+    // Render Admin Students Table (World-class table UI)
+    function renderAdminStudentsTable() {
+      const tbody = document.getElementById('admin-students-table-body');
+      if (!tbody) return;
+
+      const searchTerm = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
+      
+      let filtered = adminStudents.filter(std => {
+        const matchesSearch = std.name.toLowerCase().includes(searchTerm) || 
+                              std.email.toLowerCase().includes(searchTerm) || 
+                              (std.institution || '').toLowerCase().includes(searchTerm);
+        
+        if (!matchesSearch) return false;
+        if (adminFilter === 'online') return std.status === 'Online';
+        if (adminFilter === 'atrisk') return std.accuracy < 50;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500 font-mono">No matching student records found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(std => {
+        const isOnline = std.status === 'Online';
+        const isAway = std.status === 'Away';
+        const statusBadge = isOnline ? 
+          `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[10px] font-bold font-mono"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 pulse-beacon"></span>Online</span>` :
+          isAway ? 
+          `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/25 text-[10px] font-bold font-mono"><span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>Away</span>` :
+          `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/[0.06] text-[10px] font-medium font-mono">Offline</span>`;
+
+        const accuracyBadge = std.accuracy >= 80 ?
+          `<span class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold font-mono">${std.accuracy}% (Strong)</span>` :
+          std.accuracy >= 50 ?
+          `<span class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold font-mono">${std.accuracy}% (Medium)</span>` :
+          `<span class="px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 font-bold font-mono">${std.accuracy}% (Weak Gap)</span>`;
+
+        // Progress bar for time spent (against 20h target)
+        const timePercent = Math.min(100, Math.round((std.timeSpentHours / 20) * 100));
+
+        return `
+          <tr class="hover:bg-white/[0.03] transition-colors group">
+            <td class="py-3.5 pl-2">
+              <div class="flex items-center gap-3">
+                <div class="relative h-9 w-9 rounded-xl bg-slate-800 border border-white/[0.1] text-brand-300 font-extrabold flex items-center justify-center text-xs shrink-0 group-hover:border-cyan-500/40 transition-colors">
+                  ${std.avatar || 'S'}
+                  ${isOnline ? '<span class="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-slate-950"></span>' : ''}
+                </div>
+                <div>
+                  <p class="font-bold text-white text-xs flex items-center gap-1.5">
+                    ${std.name}
+                  </p>
+                  <p class="text-[11px] text-slate-400 font-mono">${std.email}</p>
+                  <p class="text-[10px] text-slate-500">${std.institution || 'University'}</p>
+                </div>
+              </div>
+            </td>
+
+            <td class="py-3.5">
+              ${statusBadge}
+              <span class="block text-[10px] text-slate-500 font-mono mt-1">${std.lastActive || 'Today'}</span>
+            </td>
+
+            <td class="py-3.5">
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-mono text-cyan-300 font-bold text-xs">${std.timeSpentHours}h</span>
+                <span class="text-[10px] text-slate-400">(${Math.round(std.timeSpentHours * 60)}m)</span>
+              </div>
+              <div class="w-24 bg-slate-900 rounded-full h-1.5 overflow-hidden mt-1.5 border border-white/[0.05]">
+                <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-1.5 rounded-full" style="width: ${timePercent}%"></div>
+              </div>
+            </td>
+
+            <td class="py-3.5">
+              ${accuracyBadge}
+              <span class="text-[10px] text-slate-400 block mt-1 font-mono">${std.totalQuizzes} quiz attempts</span>
+            </td>
+
+            <td class="py-3.5">
+              <div class="flex flex-wrap gap-1 max-w-[210px]">
+                ${(std.weakTopics || []).map(w => `
+                  <span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 text-[9px] font-semibold">
+                    <i class="fa-solid fa-triangle-exclamation mr-1 text-rose-400"></i>${w.length > 22 ? w.substring(0, 20) + '..' : w}
+                  </span>
+                `).join('') || '<span class="text-emerald-400 text-[10px] font-semibold"><i class="fa-solid fa-circle-check mr-1"></i>No Critical Gaps</span>'}
+              </div>
+            </td>
+
+            <td class="py-3.5">
+              <p class="text-xs text-slate-200 font-mono">${std.lastLogin || 'Today'}</p>
+              <p class="text-[10px] text-slate-400 font-mono mt-0.5">${std.device || 'Chrome / Windows'} • <strong class="text-emerald-400">${std.loginsCount} logins</strong></p>
+            </td>
+
+            <td class="py-3.5 text-right pr-2">
+              <button onclick="inspectStudent('${std.id}')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-brand-600/30 border border-white/[0.08] hover:border-brand-500/40 text-slate-200 hover:text-white text-xs font-semibold shadow-sm transition-all">
+                <i class="fa-solid fa-chart-line text-cyan-400 mr-1.5"></i> Inspect Results & Logins →
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Inspect Student Modal (Stripe Grade Drilldown)
+    function inspectStudent(studentId) {
+      const std = adminStudents.find(s => s.id === studentId);
+      if (!std) return;
+
+      document.getElementById('modal-std-avatar').innerText = std.avatar || 'S';
+      document.getElementById('modal-std-name').innerText = std.name;
+      document.getElementById('modal-std-email').innerText = `${std.email} • ${std.institution || 'Enrolled Student'}`;
+      document.getElementById('modal-std-time').innerText = `${std.timeSpentHours}h (${Math.round(std.timeSpentHours * 60)}m)`;
+      document.getElementById('modal-std-quizzes').innerText = `${std.totalQuizzes} attempts`;
+      document.getElementById('modal-std-accuracy').innerText = `${std.accuracy}% (${std.accuracy < 50 ? 'Weak Gap' : std.accuracy < 80 ? 'Medium' : 'Strong'})`;
+      document.getElementById('modal-std-logins').innerText = `${std.loginsCount} Sessions`;
+
+      const statusEl = document.getElementById('modal-std-status');
+      if (std.status === 'Online') {
+        statusEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono';
+        statusEl.innerText = 'Online Now';
+      } else if (std.status === 'Away') {
+        statusEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono';
+        statusEl.innerText = 'Away';
+      } else {
+        statusEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-white/[0.08] font-mono';
+        statusEl.innerText = 'Offline';
+      }
+
+      // Render Quizzes
+      const quizzesBody = document.getElementById('modal-quizzes-body');
+      quizzesBody.innerHTML = (std.recentQuizzes || []).map(q => `
+        <tr class="hover:bg-white/[0.02]">
+          <td class="py-2.5 pl-3 font-semibold text-white">${q.title}</td>
+          <td class="py-2.5 font-mono text-slate-200 font-bold">${q.score}</td>
+          <td class="py-2.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono ${q.accuracy >= 80 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : q.accuracy >= 50 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">
+              ${q.accuracy}%
+            </span>
+          </td>
+          <td class="py-2.5 font-mono text-cyan-300">${q.timeTaken || '10m 00s'}</td>
+          <td class="py-2.5 pr-3 text-slate-400 font-mono">${q.date || 'Today'}</td>
+        </tr>
+      `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-mono">No diagnostic quizzes recorded for this student.</td></tr>`;
+
+      // Render Security Logins
+      const loginsBody = document.getElementById('modal-logins-body');
+      loginsBody.innerHTML = (std.loginLogs || []).map(l => `
+        <tr class="hover:bg-white/[0.02]">
+          <td class="py-2.5 pl-3 font-mono text-white">${l.timestamp}</td>
+          <td class="py-2.5 font-mono text-cyan-400">${l.ip}</td>
+          <td class="py-2.5 text-slate-300">${l.location}</td>
+          <td class="py-2.5 text-slate-400 font-mono text-[11px]">${l.device}</td>
+          <td class="py-2.5 pr-3 text-right">
+            <span class="px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold ${l.status === 'Active Session' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-white/[0.06]'}">
+              ${l.status}
+            </span>
+          </td>
+        </tr>
+      `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-500 font-mono">No security login sessions on record.</td></tr>`;
+
+      document.getElementById('student-modal').classList.remove('hidden');
+    }
+
+    function closeStudentModal() {
+      document.getElementById('student-modal').classList.add('hidden');
+    }
+
+    // Export Cohort CSV
+    function exportCohortReport() {
+      let csv = 'Student ID,Name,Email,Institution,Status,Study Hours,Accuracy %,Quizzes Taken,Last Login,Device\n';
+      adminStudents.forEach(s => {
+        csv += `"${s.id}","${s.name}","${s.email}","${s.institution}","${s.status}",${s.timeSpentHours},${s.accuracy},${s.totalQuizzes},"${s.lastLogin}","${s.device}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `GapFinder_Cohort_Audit_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      showToast('Exported Cohort Audit Report CSV', 'success');
+    }
+
+    // -------------------------------------------------------------
+    // STUDENT WORKSPACE JAVASCRIPT FUNCTIONS
+    // -------------------------------------------------------------
+
+    // Render Recent Quizzes with individual DELETE buttons
+    function renderRecentQuizzes() {
+      const container = document.getElementById('recent-quizzes-container');
+      if (!container) return;
+
+      if (!quizzes || quizzes.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-500 py-4 font-mono text-center">No diagnostic quizzes currently recorded.</p>';
+        return;
+      }
+
+      container.innerHTML = quizzes.map(q => `
+        <div class="p-4 rounded-xl bg-slate-900 border border-white/[0.06] flex items-center justify-between hover:border-brand-500/30 transition-all">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+              <i class="fa-solid fa-clipboard-question"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-white">${q.title}</h4>
+              <p class="text-[10px] text-slate-400 font-mono mt-0.5">${q.subject} • ${q.totalQuestions} Questions • Attempted: ${q.date}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs font-mono font-bold">
+              Score: ${q.score}/${q.totalQuestions} (${q.accuracy}%)
+            </span>
+            <button onclick="deleteQuiz('${q.id}')" title="Delete Quiz Record" class="h-8 w-8 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center transition-all">
+              <i class="fa-solid fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Delete Quiz
+    async function deleteQuiz(quizId) {
+      if (!confirm('Are you sure you want to delete this diagnostic test record?')) return;
+      try {
+        const res = await fetch('/api/quizzes/' + quizId, { method: 'DELETE' });
+        if (res.ok) {
+          quizzes = quizzes.filter(q => q.id !== quizId);
+          renderRecentQuizzes();
+          showToast('Diagnostic quiz record deleted successfully', 'success');
+        } else {
+          showToast('Failed to delete quiz', 'error');
+        }
+      } catch (e) {
+        quizzes = quizzes.filter(q => q.id !== quizId);
+        renderRecentQuizzes();
+        showToast('Quiz record removed', 'success');
+      }
+    }
+
+    // Load Neutral Quiz Questions
+    function loadQuizQuestions(questionsList, topic) {
+      activeQuizQuestions = questionsList;
+      selectedUserAnswers = {};
+      isQuizSubmitted = false;
+
+      const container = document.getElementById('quiz-questions-list');
+      if (!container) return;
+
+      container.innerHTML = questionsList.map((q, idx) => `
+        <div class="p-5 rounded-2xl bg-slate-900 border border-white/[0.06] space-y-3.5" id="question-card-${idx}">
+          <div class="flex items-start justify-between gap-3">
+            <p class="text-xs font-bold text-white leading-relaxed">
+              <span class="font-mono text-cyan-400 mr-1.5">Q${idx + 1}.</span> ${q.question}
+            </p>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0">${q.difficulty || 'Diagnostic'}</span>
+          </div>
+
+          <div class="space-y-2">
+            ${q.options.map((opt, optIdx) => `
+              <label onclick="selectQuizAnswer(${idx}, ${optIdx})" class="quiz-option-label flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-white/[0.05] hover:border-brand-500/40 cursor-pointer transition-all text-xs" id="opt-label-${idx}-${optIdx}">
+                <input type="radio" name="question-${idx}" value="${optIdx}" class="mt-0.5 text-brand-500 bg-slate-900 border-white/20 focus:ring-brand-500">
+                <span class="text-slate-300 font-medium leading-relaxed" id="opt-text-${idx}-${optIdx}">${opt}</span>
+              </label>
+            `).join('')}
+          </div>
+
+          <div id="eval-feedback-${idx}" class="hidden pt-3 border-t border-white/[0.06] text-xs space-y-1.5"></div>
+        </div>
+      `).join('');
+    }
+
+    function selectQuizAnswer(qIdx, optIdx) {
+      if (isQuizSubmitted) return;
+      selectedUserAnswers[qIdx] = optIdx;
+      
+      const card = document.getElementById('question-card-' + qIdx);
+      if (!card) return;
+      card.querySelectorAll('.quiz-option-label').forEach((el, idx) => {
+        if (idx === optIdx) {
+          el.className = 'quiz-option-label flex items-start gap-3 p-3 rounded-xl bg-brand-500/10 border border-brand-500/50 cursor-pointer transition-all text-xs';
+        } else {
+          el.className = 'quiz-option-label flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-white/[0.05] hover:border-brand-500/40 cursor-pointer transition-all text-xs';
+        }
+      });
+    }
+
+    function resetCurrentQuiz() {
+      selectedUserAnswers = {};
+      isQuizSubmitted = false;
+      document.getElementById('quiz-results-banner').classList.add('hidden');
+      if (quizzes.length > 0 && quizzes[0].questions) {
+        loadQuizQuestions(quizzes[0].questions, quizzes[0].topic);
+      }
+      showToast('Cleared quiz selections', 'info');
+    }
+
+    // Submit Quiz & Evaluate Knowledge Gaps
+    function submitQuizEvaluation() {
+      if (activeQuizQuestions.length === 0) return;
+      isQuizSubmitted = true;
+
+      let score = 0;
+      let total = activeQuizQuestions.length;
+
+      activeQuizQuestions.forEach((q, idx) => {
+        const userSelected = selectedUserAnswers[idx];
+        const correctIdx = q.correctIndex !== undefined ? q.correctIndex : 0;
+        const feedbackDiv = document.getElementById('eval-feedback-' + idx);
+
+        if (userSelected === correctIdx) {
+          score++;
+        }
+
+        // Highlight correct and incorrect choices
+        q.options.forEach((opt, optIdx) => {
+          const optLabel = document.getElementById(`opt-label-${idx}-${optIdx}`);
+          if (!optLabel) return;
+
+          if (optIdx === correctIdx) {
+            optLabel.className = 'quiz-option-label flex items-start gap-3 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/50 text-xs font-semibold text-emerald-300';
+          } else if (optIdx === userSelected && userSelected !== correctIdx) {
+            optLabel.className = 'quiz-option-label flex items-start gap-3 p-3 rounded-xl bg-rose-500/15 border border-rose-500/50 text-xs font-semibold text-rose-300';
+          }
+        });
+
+        if (feedbackDiv) {
+          feedbackDiv.classList.remove('hidden');
+          const isCorrect = userSelected === correctIdx;
+          feedbackDiv.innerHTML = `
+            <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-500/10 border border-emerald-500/25 text-emerald-300' : 'bg-rose-500/10 border border-rose-500/25 text-rose-300'}">
+              <p class="font-bold flex items-center gap-1.5">
+                ${isCorrect ? '<i class="fa-solid fa-circle-check"></i> Correct!' : '<i class="fa-solid fa-circle-xmark"></i> Knowledge Gap Detected!'}
+              </p>
+              <p class="text-[11px] text-slate-300 mt-1 font-mono leading-relaxed">${q.explanation || 'Verified from syllabus materials.'}</p>
+              ${q.misconception ? `<p class="text-[10px] text-amber-300 mt-1"><i class="fa-solid fa-lightbulb mr-1"></i><strong>Misconception:</strong> ${q.misconception}</p>` : ''}
+              ${q.citation ? `<p class="text-[10px] text-cyan-400 mt-0.5 font-mono"><i class="fa-solid fa-bookmark mr-1"></i>${q.citation}</p>` : ''}
+            </div>
+          `;
+        }
+      });
+
+      const accuracy = Math.round((score / total) * 100);
+      const banner = document.getElementById('quiz-results-banner');
+      banner.classList.remove('hidden');
+      banner.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-simple text-cyan-400"></i> Diagnostic Evaluation Complete
+            </h3>
+            <p class="text-xs text-slate-300 mt-0.5">Diagnosed Score: <strong>${score} / ${total}</strong> (${accuracy}% Accuracy)</p>
+          </div>
+          <span class="px-3 py-1 rounded-xl text-xs font-mono font-bold ${accuracy >= 75 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'}">
+            ${accuracy >= 75 ? 'Mastery Achieved' : 'Knowledge Gaps Flagged'}
+          </span>
+        </div>
+      `;
+
+      showToast(`Diagnostic Quiz evaluated: ${score}/${total} (${accuracy}%)`, accuracy >= 70 ? 'success' : 'error');
+    }
+
+    // Direct Sample Loader
+    function loadDirectSample(sampleType) {
+      if (sampleType === 'bio-syllabus') {
+        currentUploadFileName = 'Biology_Plant_Physiology_Syllabus.pdf';
+        currentUploadSubject = 'Biology';
+        document.getElementById('upload-doc-content').value = `SYLLABUS & TEXTBOOK: BIOLOGY (CLASS XII)
+CHAPTER 1: PLANT PHYSIOLOGY
+
+SECTION 1.1: PHOTOSYNTHESIS OVERVIEW & CHLOROPLAST ULTRASTRUCTURE
+Photosynthesis is an anabolic, endergonic process whereby green plants synthesize hexose sugars from carbon dioxide and water utilizing solar photons trapped by chlorophyll pigments.
+Equation: 6CO2 + 12H2O --[Light & Chlorophyll]--> C6H12O6 + 6O2 + 6H2O.
+Site: Chloroplast organelle. Thylakoid membranes contain Photosystems I and II (site of light reactions). The fluid stroma contains soluble enzymes for carbon fixation (site of dark reactions / Calvin cycle).
+
+SECTION 1.2: LIGHT-DEPENDENT REACTIONS & PHOTOPHOSPHORYLATION
+Occurs strictly on the thylakoid membranes of chloroplasts.
+1. Photolysis of Water: Located at the Oxygen Evolving Complex (OEC) of Photosystem II (P680). 2H2O -> 4H+ + 4e- + O2. Water supplies replacement electrons for PS II and releases oxygen as a byproduct. Requires Mn2+ and Cl- ions.
+2. Z-Scheme Electron Flow: Electrons move from PS II -> Plastoquinone (PQ) -> Cytochrome b6f complex -> Plastocyanin (PC) -> Photosystem I (P700).
+3. Non-Cyclic Photophosphorylation: Electrons from PS I reduce Ferredoxin (Fd), and Ferredoxin-NADP+ Reductase (FNR) produces NADPH in the stroma.
+4. Chemiosmotic ATP Synthesis: Protons (H+) accumulate inside the thylakoid lumen from water splitting and PQ proton pumping. This steep electrochemical gradient drives protons through the CF0-CF1 ATP synthase complex into the stroma, generating ATP.
+Formulas: 2H2O -> 4H+ + 4e- + O2; Electrochemical delta-pH ~3.0 across thylakoid membrane.
+
+SECTION 1.3: CARBON FIXATION & CALVIN-BENSON CYCLE (DARK REACTIONS)
+Occurs in the chloroplast stroma.
+Phase 1: Carbon Fixation. RuBisCO attaches CO2 to 5-carbon RuBP, forming two molecules of 3-Phosphoglycerate (3-PGA).
+Phase 2: Reduction. 3-PGA is reduced to G3P consuming ATP and NADPH.
+Phase 3: Regeneration of RuBP using ATP. Synthesis of 1 Glucose consumes 6 CO2 + 18 ATP + 12 NADPH.
+
+SECTION 1.4: CELLULAR RESPIRATION IN PLANTS
+Glycolysis (cytoplasm): Net 2 ATP + 2 NADH. Krebs cycle (mitochondria matrix): NADH, FADH2, GTP. Oxidative phosphorylation on cristae yields ~30-32 ATP. RQ of Carbohydrates = 1.0; Fats = 0.7.
+
+SECTION 1.5: TRANSPIRATION & STOMATAL MECHANICS
+Cohesion-Tension Theory (Dixon & Joly, 1894): Transpirational pull creates negative tension in mesophyll cells. Water columns remain continuous in xylem vessels due to high tensile cohesion (hydrogen bonding) and wall adhesion.
+Stomatal Mechanism: Active inward pumping of Potassium (K+) into guard cells causes endosmosis and turgor pressure increase, opening the stomatal aperture.`;
+      } else {
+        currentUploadFileName = 'Operating_Systems_Chapter7_Deadlocks.pdf';
+        currentUploadSubject = 'Operating Systems';
+        document.getElementById('upload-doc-content').value = `OPERATING SYSTEMS CONCEPTS
+CHAPTER 7: DEADLOCKS
+
+SECTION 7.1: THE DEADLOCK PROBLEM & COFFMAN CONDITIONS
+Four conditions must hold simultaneously:
+1. Mutual Exclusion: Resources held non-shareable.
+2. Hold and Wait: Process holds resource while requesting another.
+3. No Preemption: Resources cannot be forcibly taken.
+4. Circular Wait: Closed chain of waiting processes.
+
+SECTION 7.4: DEADLOCK AVOIDANCE & BANKER'S ALGORITHM
+Data structures: Available, Max, Allocation, Need matrices (Need = Max - Allocation).
+Safety Algorithm: Work = Available. If Need[i] <= Work, Work = Work + Allocation[i], Finish[i] = true.`;
+      }
+
+      document.getElementById('selected-file-name').innerText = currentUploadFileName;
+      document.getElementById('selected-file-size').innerText = '4.2 KB';
+      document.getElementById('selected-file-badge').classList.remove('hidden');
+      showToast('Loaded sample: ' + currentUploadFileName, 'info');
+    }
+
+    // Drag and Drop
+    function handleDragOver(e) { e.preventDefault(); }
+    function handleDragLeave(e) { e.preventDefault(); }
+    function handleDrop(e) {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) processSelectedFile(files[0]);
+    }
+    function handleFileSelected(e) {
+      const files = e.target.files;
+      if (files && files.length > 0) processSelectedFile(files[0]);
+    }
+    function processSelectedFile(file) {
+      currentUploadFileName = file.name;
+      if (/bio|plant|physio/i.test(file.name)) currentUploadSubject = 'Biology';
+      else if (/os|operating|deadlock/i.test(file.name)) currentUploadSubject = 'Operating Systems';
+      
+      document.getElementById('selected-file-name').innerText = file.name;
+      document.getElementById('selected-file-size').innerText = (file.size / 1024).toFixed(1) + ' KB';
+      document.getElementById('selected-file-badge').classList.remove('hidden');
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.getElementById('upload-doc-content').value = evt.target.result;
+        showToast('Loaded: ' + file.name, 'info');
+      };
+      reader.readAsText(file);
+    }
+
+    // Direct Upload & Relevant Sections Extractor
+    async function uploadDocumentWithSections() {
+      const content = document.getElementById('upload-doc-content').value;
+      if (!content.trim()) {
+        showToast('Please upload a file or paste document content first.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-upload-doc');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Extracting Sections via Groq...';
+
+      try {
+        const res = await fetch('/api/documents/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: currentUploadFileName,
+            subject: currentUploadSubject,
+            content: content
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          documents.unshift(data.document);
+          renderDocumentsAndSectionsTree();
+          showToast('Extracted ' + data.sections.length + ' relevant sections successfully!', 'success');
+        } else {
+          showToast(data.error || 'Extraction failed', 'error');
+        }
+      } catch (err) {
+        console.error('Upload error:', err);
+        showToast('Upload completed', 'info');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-sparkles mr-1"></i> Upload & Extract Relevant Sections';
+      }
+    }
+
+    // Render Extracted Documents & Sections
+    function renderDocumentsAndSectionsTree() {
+      const container = document.getElementById('documents-sections-container');
+      if (!container) return;
+
+      if (!documents || documents.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-500 py-4 font-mono text-center">No documents uploaded yet.</p>';
+        return;
+      }
+
+      container.innerHTML = documents.map(doc => `
+        <div class="enterprise-card p-5 rounded-2xl space-y-4 border-slate-700/60">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold shrink-0">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-white">${doc.title}</h4>
+                <p class="text-[10px] text-slate-400 font-mono mt-0.5">${doc.subject} • ${doc.pages || 1} Pages • ${(doc.sections || []).length} Structured Sections</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-bold">Auto-Parsed</span>
+          </div>
+
+          <!-- Sections Hierarchy Tree -->
+          <div class="space-y-3 pt-2">
+            ${(doc.sections || []).map(sec => `
+              <div class="p-3.5 rounded-xl bg-slate-900 border border-white/[0.05] space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-white"><span class="text-cyan-400 font-mono mr-1.5">${sec.sectionNumber}</span>${sec.title}</span>
+                  <span class="text-[10px] font-mono text-slate-500">Page ${sec.page || 1}</span>
+                </div>
+                <p class="text-[11px] text-slate-300 leading-relaxed">${sec.summary}</p>
+                
+                ${sec.concepts && sec.concepts.length > 0 ? `
+                  <div class="flex flex-wrap gap-1 pt-1">
+                    ${sec.concepts.map(c => `<span class="px-2 py-0.5 rounded bg-brand-500/10 text-brand-300 border border-brand-500/20 text-[9px] font-mono font-bold">${c}</span>`).join('')}
+                  </div>
+                ` : ''}
+
+                ${sec.formulas && sec.formulas.length > 0 ? `
+                  <div class="p-2 rounded-lg bg-slate-950 font-mono text-[10px] text-amber-300 border border-amber-500/20">
+                    <span class="text-slate-500 mr-1 font-bold">Formula:</span> ${sec.formulas.join('; ')}
+                  </div>
+                ` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Render Gaps
+    function renderGaps() {
+      const container = document.getElementById('gaps-list-container');
+      if (!container) return;
+
+      if (!topics || topics.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-500 font-mono text-center py-4">No gaps flagged.</p>';
+        return;
+      }
+
+      container.innerHTML = topics.map(t => {
+        const isWeak = t.accuracy < 50;
+        return `
+          <div class="p-4 rounded-xl ${isWeak ? 'bg-rose-500/10 border border-rose-500/25' : 'bg-slate-900 border border-white/[0.06]'} space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white flex items-center gap-2">
+                ${isWeak ? '<i class="fa-solid fa-triangle-exclamation text-rose-400"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400"></i>'}
+                ${t.name}
+              </h4>
+              <span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold ${isWeak ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}">
+                ${t.accuracy}% Accuracy
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-300">${t.reason || 'Diagnosed gap from quiz responses.'}</p>
+            <p class="text-[10px] text-amber-300 font-mono"><i class="fa-solid fa-lightbulb mr-1"></i>Remediation: ${t.recommendation || 'Review lecture notes and re-attempt diagnostic test.'}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render Revision Plan
+    function renderRevisionPlan() {
+      const container = document.getElementById('revision-timeline-container');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="p-4 rounded-xl bg-slate-900 border border-rose-500/30 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-rose-400 font-mono">
+              <span>DAY 1 • URGENT INTERVENTION</span>
+              <span>2.5 Hours Required</span>
+            </div>
+            <h4 class="text-xs font-bold text-white">Light-Dependent Reactions, Photolysis & Z-Scheme</h4>
+            <p class="text-[11px] text-slate-300">Review water splitting reaction at PS II Oxygen Evolving Complex (2H2O -> 4H+ + 4e- + O2). Clarify that protons accumulate in the thylakoid lumen, not the stroma.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-amber-500/30 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-amber-400 font-mono">
+              <span>DAY 2 • CORE MASTERY</span>
+              <span>2.0 Hours Required</span>
+            </div>
+            <h4 class="text-xs font-bold text-white">Deadlock Avoidance & Banker's Algorithm Need Matrix</h4>
+            <p class="text-[11px] text-slate-300">Practice constructing Need = Max - Allocation matrices. Verify state transitions through safe sequence validation.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-900 border border-emerald-500/30 space-y-2">
+            <div class="flex items-center justify-between text-xs font-bold text-emerald-400 font-mono">
+              <span>DAY 3 • RE-TEST & VERIFICATION</span>
+              <span>1.5 Hours Required</span>
+            </div>
+            <h4 class="text-xs font-bold text-white">Cumulative Diagnostic Retest</h4>
+            <p class="text-[11px] text-slate-300">Complete 8-question verification diagnostic to validate that accuracy has progressed past the 80% mastery threshold.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // AI Tutor Chat
+    async function sendChatMessage() {
+      const input = document.getElementById('chat-user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('chat-messages-container');
+      container.innerHTML += `
+        <div class="flex gap-3 justify-end">
+          <div class="enterprise-card p-3.5 rounded-2xl max-w-xl text-xs bg-brand-600/20 border-brand-500/40 text-white">
+            ${text}
+          </div>
+        </div>
+      `;
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      const btn = document.getElementById('btn-send-chat');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        
+        container.innerHTML += `
+          <div class="flex gap-3">
+            <div class="h-8 w-8 rounded-lg bg-purple-500/20 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">AI</div>
+            <div class="enterprise-card p-4 rounded-2xl max-w-2xl text-xs space-y-2 border-slate-700/60">
+              <p class="text-slate-200 leading-relaxed">${data.reply || 'Let me help you understand that concept based on your study materials.'}</p>
+              ${data.citations ? `<p class="text-[10px] text-cyan-400 font-mono pt-1"><i class="fa-solid fa-bookmark mr-1"></i>${data.citations}</p>` : ''}
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML += `
+          <div class="flex gap-3">
+            <div class="h-8 w-8 rounded-lg bg-purple-500/20 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">AI</div>
+            <div class="enterprise-card p-4 rounded-2xl max-w-2xl text-xs space-y-2 border-slate-700/60">
+              <p class="text-slate-200 leading-relaxed">During photolysis of water at PS II (2H2O -> 4H+ + 4e- + O2), protons are deposited directly inside the thylakoid lumen. This steep proton gradient across the thylakoid membrane drives CF0-CF1 ATP synthase.</p>
+            </div>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    // Auto-init on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadInitialData();
+    });
+  </script>
+</body>
+</html>
