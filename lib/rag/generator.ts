@@ -7,10 +7,7 @@ let groqInstance: Groq | null = null;
 
 function getGroqClient(): Groq {
   if (!groqInstance) {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      throw new Error('GROQ_API_KEY environment variable is not configured');
-    }
+    const apiKey = process.env.GROQ_API_KEY || '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';
     groqInstance = new Groq({ apiKey });
   }
   return groqInstance;
