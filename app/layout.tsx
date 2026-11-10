@@ -5,6 +5,8 @@ import { ToastProvider } from '@/components/providers/toast-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'GapFinder AI – Discover What You Don\'t Know',
   description:
