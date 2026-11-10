@@ -4,8 +4,8 @@ import { cookies } from 'next/headers';
 
 export function createClient() {
   const cookieStore = cookies();
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key-for-build';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uvebpupeacjgwvcsjxbk.supabase.co';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_rzaHhCsPvSxHNYe7TID_vg_461uEgpN';
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -27,11 +27,11 @@ export function createClient() {
 }
 
 export function createServiceClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uvebpupeacjgwvcsjxbk.supabase.co';
   const serviceRoleKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    'placeholder-service-key-for-build';
+    'sb_publishable_rzaHhCsPvSxHNYe7TID_vg_461uEgpN';
 
   return createSupabaseClient(supabaseUrl, serviceRoleKey, {
     auth: {

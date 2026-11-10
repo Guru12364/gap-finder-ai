@@ -41,8 +41,8 @@ export async function updateSession(request: NextRequest) {
   }
 
   // 2. Otherwise attempt Supabase session verification
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key-for-build';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://uvebpupeacjgwvcsjxbk.supabase.co';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_rzaHhCsPvSxHNYe7TID_vg_461uEgpN';
 
   // If using placeholder Supabase credentials in deployment, don't hard-block demo navigation
   const isPlaceholderSupabase = supabaseUrl.includes('placeholder-project');
