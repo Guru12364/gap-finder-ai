@@ -36,7 +36,7 @@ interface ToastState {
   message: string;
 }
 
-export default function RevisionPlannerPage() {
+function RevisionPlannerContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialSubject = searchParams.get('subject_id') || '';
@@ -607,5 +607,17 @@ export default function RevisionPlannerPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function RevisionPlannerPage() {
+  return (
+    <React.Suspense fallback={
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+      </div>
+    }>
+      <RevisionPlannerContent />
+    </React.Suspense>
   );
 }

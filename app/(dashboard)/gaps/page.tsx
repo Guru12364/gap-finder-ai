@@ -36,7 +36,7 @@ interface ToastState {
 
 type TabFilter = 'all' | 'weak' | 'medium' | 'strong' | 'not_assessed';
 
-export default function KnowledgeGapsPage() {
+function KnowledgeGapsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialSubject = searchParams.get('subject_id') || '';
@@ -541,5 +541,17 @@ export default function KnowledgeGapsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function KnowledgeGapsPage() {
+  return (
+    <React.Suspense fallback={
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+      </div>
+    }>
+      <KnowledgeGapsContent />
+    </React.Suspense>
   );
 }
